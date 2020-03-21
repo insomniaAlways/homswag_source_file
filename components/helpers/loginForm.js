@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, TextInput, Platform } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-function LoginForm(props) {
+export default function LoginForm(props) {
   const { phone, setPhone, otp, setOtp, showOtpField, isResendEnable, registerPhone } = props
   const keyboardType = Platform.OS === 'ios' ? 'name-phone-pad' : 'number-pad'
 
@@ -46,8 +46,6 @@ function LoginForm(props) {
     </View>
   )
 }
-
-export default LoginForm;
 
 const styles = StyleSheet.create({
   container: {
@@ -94,7 +92,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.40)',
     minHeight: 40,
     borderWidth: 1,
-    paddingVertical: 7,
+    // paddingVertical: 7,
     backgroundColor: 'rgba(0,0,0,0.3)',
     fontSize: 20,
     borderRadius: 20,

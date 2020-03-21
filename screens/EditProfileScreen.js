@@ -1,10 +1,10 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import PlaceHolderTextInput from '../components/placeHolderTextInput';
-import Constants from 'expo-constants';
+// import Constants from 'expo-constants';
 import { connect } from 'react-redux';
 import { brandColor, brandLightBackdroundColor } from '../style/customStyles';
-import { fetchUser, updateUser } from '../../store/actions/userActions';
+import { fetchUser, updateUser } from '../store/actions/userActions';
 import ImagePickerView from '../components/ImagePicker';
 
 function UpdateProfileScreen(props) {
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   container: {
-    paddingTop: Constants.statusBarHeight,
+    // paddingTop: Constants.statusBarHeight,
     paddingBottom: 40,
     marginHorizontal: 40,
     marginVertical: 60,

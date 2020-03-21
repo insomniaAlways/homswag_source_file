@@ -5,8 +5,8 @@ import DefaultStyles, { brandColor } from '../style/customStyles';
 import _ from 'lodash';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
-import { fetchCart } from '../../store/actions/cartAction';
-import { createOrder, fetchAllOrder } from '../../store/actions/orderActions';
+import { fetchCart } from '../store/actions/cartAction';
+import { createOrder, fetchAllOrder } from '../store/actions/orderActions';
 // import LoadingModal from '../components/loadingModal';
 
 function PaymentScreen(props) {

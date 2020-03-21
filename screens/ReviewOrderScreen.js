@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchCart } from '../../store/actions/cartAction';
-import { createOrder } from '../../store/actions/orderActions';
-import Graphics from '../../assets/images/order_confirm_background.png'
+import { fetchCart } from '../store/actions/cartAction';
+import { createOrder } from '../store/actions/orderActions';
+import Graphics from '../assets/images/order_confirm_background.png'
 import { View, StyleSheet, ScrollView, ImageBackground, Text } from 'react-native';
-import Constants from 'expo-constants';
+// import Constants from 'expo-constants';
 import ItemView from '../components/itemView';
 import { TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import { brandColor, brandLightBackdroundColor } from '../style/customStyles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function ReviewOrderScreen (props) {
   const { cart, orderModel, getCart, placeOrder, appointment, networkAvailability } = props
@@ -146,7 +146,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ReviewOrderScreen);
 const styles = StyleSheet.create({
   infoContainer: {
     flex: 2,
-    paddingTop: Constants.statusBarHeight,
+    // paddingTop: Constants.statusBarHeight,
     justifyContent: 'center',
     alignItems: 'center'
   },

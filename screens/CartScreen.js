@@ -2,13 +2,13 @@ import React, { useEffect, useLayoutEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import { connect } from 'react-redux';
 import CartItemList from '../components/cartItemList';
-import { fetchCart } from '../../store/actions/cartAction';
+import { fetchCart } from '../store/actions/cartAction';
 import PriceBreakDown from '../components/priceBreackDown';
 import DefaultStyles from '../style/customStyles';
 import AppointmentDetails from '../components/appointmentDetails';
 import CartPromoItemList from '../components/cartPromoItemList';
-import EmptyCart from '../../assets/images/empty_cart.png'
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import EmptyCart from '../assets/images/empty_cart.png'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment'
 
 function CartScreen(props) {

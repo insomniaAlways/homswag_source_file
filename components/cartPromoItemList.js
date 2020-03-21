@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, FlatList, Text } from 'react-native';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { fetchCart } from '../../store/actions/cartAction';
-import { FontAwesome } from '@expo/vector-icons';
+import { fetchCart } from '../store/actions/cartAction';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AddToCartButton from './addToCartButton';
-import { fetchCartItems, createCartItem } from '../../store/actions/cartItemAction';
+import { fetchCartItems, createCartItem } from '../store/actions/cartItemAction';
 
 const CartPromoItemList = (props) => {
   const defaultLength = 5

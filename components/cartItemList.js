@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { fetchCart } from '../../store/actions/cartAction';
+import { fetchCart } from '../store/actions/cartAction';
 import CartItemRow from './cartItemRow';
 
 const ItemsList = (props) => {

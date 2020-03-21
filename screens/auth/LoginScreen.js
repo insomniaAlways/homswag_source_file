@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions, Text, ActivityIndicator } from 'react-native';
 import { ImageOverlay } from '../../components/imageOverlay';
 import { KeyboardAvoidingView } from '../../components/KeyboardAvoidView';
-import ImageBackground from '../../../assets/images/login_background.png'
-import Logo from '../../../assets/images/logo_rounded_512*512.png'
+import ImageBackground from '../../assets/images/login_background.png'
+import Logo from '../../assets/images/logo_rounded_512*512.png'
 import { connect } from 'react-redux';
-import { register, validatedAuthToken } from '../../../store/actions/authenticationAction';
-import { setSessionUnauthenticated, setSessionAuthenticated } from '../../../store/actions/sessionActions';
-import { fetchUser } from '../../../store/actions/userActions'
-import { AsyncStorage } from 'react-native';
+import { register, validatedAuthToken } from '../../store/actions/authenticationAction';
+import { setSessionUnauthenticated, setSessionAuthenticated } from '../../store/actions/sessionActions';
+import { fetchUser } from '../../store/actions/userActions'
+import { AsyncStorage } from '@react-native-community/async-storage';
 import * as Animatable from 'react-native-animatable';
 import LoginForm from '../../components/helpers/loginForm';
 import LoginButtons from '../../components/helpers/loginButtons';
-import Constants from 'expo-constants';
+// import Constants from 'expo-constants';
 import moment from 'moment';
-import * as Sentry from 'sentry-expo';
+// import * as Sentry from 'sentry-expo';
 
 const LoginScreen = (props) => {
   const { navigation,
@@ -46,10 +46,14 @@ const LoginScreen = (props) => {
   const checkAuthentication = async () => {
     try {
       let token = await AsyncStorage.getItem('token')
-      let tokenObject = JSON.parse(token)
-      if(tokenObject && tokenObject.authToken && tokenObject.refreshToken) {
-        Sentry.captureMessage(`Refresh token initiated on: ${moment().unix()}`);
-        validateCurrentToken(tokenObject.authToken, tokenObject.refreshToken)
+      if(token) {
+        let tokenObject = JSON.parse(token)
+        if(tokenObject && tokenObject.authToken && tokenObject.refreshToken) {
+          // Sentry.captureMessage(`Refresh token initiated on: ${moment().unix()}`);
+          validateCurrentToken(tokenObject.authToken, tokenObject.refreshToken)
+        } else {
+          startLoginProcess()
+        }
       } else {
         startLoginProcess()
       }
@@ -103,14 +107,14 @@ const LoginScreen = (props) => {
   // ------------------- : Hooks : ---------------------
 
   useEffect(() => {
-    Sentry.captureMessage(`Login screen load on: ${moment().unix()}`);
+    // Sentry.captureMessage(`Login screen load on: ${moment().unix()}`);
     checkAuthentication()
   }, [])
 
   //trigger when otp validation succeed
   useEffect(() => {
     if(!authModel.isLoading && authModel.userToken && authModel.refreshToken) {
-      Sentry.captureMessage(`User authentication initiated on: ${moment().unix()}`);
+      // Sentry.captureMessage(`User authentication initiated on: ${moment().unix()}`);
       authenticate(authModel.userToken, authModel.refreshToken)
     } else if(!authModel.isLoading && authModel.error) {
       setButtonLoading(false)
@@ -126,7 +130,7 @@ const LoginScreen = (props) => {
   //trigger after session is authenticated
   useEffect(() => {
     if(session.isSessionAuthenticated) {
-      Sentry.captureMessage(`Get User initiated on ${moment().unix()}`);
+      // Sentry.captureMessage(`Get User initiated on ${moment().unix()}`);
       getUser()
     }
   }, [session.isSessionAuthenticated])
@@ -136,7 +140,7 @@ const LoginScreen = (props) => {
   useEffect(() => {
     if(session.isSessionAuthenticated) {
       if(!currentUserModel.isLoading && currentUserModel.values && currentUserModel.values.id) {
-        Sentry.captureMessage(`Redirection initiated no: ${moment().unix()}`);
+        // Sentry.captureMessage(`Redirection initiated no: ${moment().unix()}`);
         redirectTo()
       } else if(!currentUserModel.isLoading && currentUserModel.error) {
         setButtonLoading(false)
@@ -233,10 +237,10 @@ const styles = StyleSheet.create({
     flex: 3,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-    paddingTop: Constants.statusBarHeight + 60
+    // paddingTop: Constants.statusBarHeight + 60
   },
   headerContainer: {
-    paddingTop: Constants.statusBarHeight + 40,
+    // paddingTop: Constants.statusBarHeight + 40,
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: 216,

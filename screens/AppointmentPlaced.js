@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchOrder } from '../../store/actions/orderActions';
+import { fetchOrder } from '../store/actions/orderActions';
 import { View, StyleSheet, BackHandler, Image, Text } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-import Tick from '../../assets/images/tick.png'
+import Tick from '../assets/images/tick.png'
 import { brandColor } from '../style/customStyles';
 
 const resetAction = StackActions.reset({

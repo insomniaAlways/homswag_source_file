@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchAllItems } from '../../store/actions/itemActions';
+import { fetchAllItems } from '../store/actions/itemActions';
 import _ from 'lodash';
 import { View, Text, StyleSheet } from 'react-native';
 

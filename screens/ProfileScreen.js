@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, StatusBar } from 'react-native';
 import PlaceHolderTextInput from '../components/placeHolderTextInput';
-import { FontAwesome } from '@expo/vector-icons';
-import Constants from 'expo-constants';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+// import Constants from 'expo-constants';
 import { connect } from 'react-redux';
-import { fetchUser, updateUser } from '../../store/actions/userActions';
+import { fetchUser, updateUser } from '../store/actions/userActions';
 import { KeyboardAvoidingView } from '../components/KeyboardAvoidView';
 import _ from 'lodash';
 import ImagePickerView from '../components/ImagePicker';
-import { brandLightBackdroundColor } from '../style/customStyles';
+import { brandLightBackdroundColor, statusBarLightColor } from '../style/customStyles';
 
 function ProfileScreen(props) {
   const { currentUserModel, getUser, updateUserDetails, networkAvailability } = props
@@ -68,6 +68,7 @@ function ProfileScreen(props) {
 
   return (
     <KeyboardAvoidingView>
+      <StatusBar backgroundColor={statusBarLightColor} barStyle={"dark-content"} />
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#F7F9FC"}}>
         <View style={{backgroundColor: "#F7F9FC", justifyContent: 'center', alignItems: 'center'}}>
           <View style={styles.container}>
@@ -207,7 +208,7 @@ function ProfileScreen(props) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Constants.statusBarHeight,
+    // paddingTop: Constants.statusBarHeight,
     // borderWidth: 1,
     justifyContent: 'center',
     marginHorizontal: 20,

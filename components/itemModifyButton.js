@@ -2,8 +2,8 @@ import React, { useReducer, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { FontAwesome } from '@expo/vector-icons'
-import { fetchCartItems, updateItem, deleteItem } from '../../store/actions/cartItemAction';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { fetchCartItems, updateItem, deleteItem } from '../store/actions/cartItemAction';
 
 function ModifyButton(props) {
   const { item, cartItem, updateCartItem, deleteCartItem, isOffline } = props

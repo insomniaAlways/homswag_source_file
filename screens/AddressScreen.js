@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
-import DefaultStyles from '../style/customStyles';
-import Constants from 'expo-constants';
-import CustomHeader from '../components/customHeader';
-import { fetchAddress, deleteAddresss, updateAddress } from '../../store/actions/addressActions';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text, View, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList, StatusBar } from 'react-native';
+import DefaultStyles, { statusBarBrandColor } from '../style/customStyles';
+// import Constants from 'expo-constants';
+import { fetchAddress, deleteAddresss, updateAddress } from '../store/actions/addressActions';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function AddressScreen(props) {
   const { addressModel, getAddress, navigation, deleteSelected, setDefault, networkAvailability } = props;
@@ -71,7 +71,7 @@ function AddressScreen(props) {
   const AddressList = function() {
     if(addresses && Array.isArray(addresses) && addresses.length) {
       return (
-        <View style={{backgroundColor: "#F7F9FC"}}>
+        <View style={{backgroundColor: "#F7F9FC", marginBottom: 55}}>
           <FlatList
             showsVerticalScrollIndicator={false}
             data={addressModel.values}
@@ -84,7 +84,7 @@ function AddressScreen(props) {
       )
     } else {
       return (
-        <View style={{flex: 1,justifyContent: 'center', alignItems: 'center', marginBottom: 30}}>
+        <View style={{flex: 1,justifyContent: 'center', alignItems: 'center', marginBottom: 55}}>
           <FontAwesome name="map-o" size={80} color="#d4d4d4" />
           <Text style={{paddingTop: 10}}>No Address found.</Text>
         </View>
@@ -103,31 +103,33 @@ function AddressScreen(props) {
     )
   } else {
     return (
-      <View style={{flex: 1}}>
-        <CustomHeader {...props}/>
-        {addressModel.isLoading ? (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size={'small'} color={"#0000ff"} />
-            <Text>Loading...</Text>
-          </View>
-        ) : ( 
-          <SafeAreaView style={{flex: 1}}>
-            <AddressList />
-            <View style={[{height: 55}, DefaultStyles.brandBackgroundColor]}>
-              <TouchableOpacity style={[styles.button, DefaultStyles.brandColorButton]} onPress={() => navigation.navigate('AddAddress', { previousRoute: 'Address' })}>
-                <Text style={{color:'#fff', fontSize: 18, fontWeight: 'bold', width: '100%', textAlign: 'center'}}>Add new Address</Text>
-              </TouchableOpacity>
+      <SafeAreaView style={{flex: 1}}>
+        <StatusBar barStyle={"list-content"} backgroundColor={statusBarBrandColor} />
+        <View style={{flex: 1}}>
+          {addressModel.isLoading ? (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size={'small'} color={"#0000ff"} />
+              <Text>Loading...</Text>
             </View>
-          </SafeAreaView>
-        )}
-      </View>
+          ) : ( 
+            <View style={{flex: 1}}>
+              <AddressList />
+              <View style={[{height: 55, position: 'absolute', bottom: 0, width: '100%'}, DefaultStyles.brandBackgroundColor]}>
+                <TouchableOpacity style={[styles.button, DefaultStyles.brandColorButton]} onPress={() => navigation.navigate('AddNewAddress', { previousRoute: 'Address' })}>
+                  <Text style={{color:'#fff', fontSize: 18, fontWeight: 'bold', width: '100%', textAlign: 'center'}}>Add new Address</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </View>
+      </SafeAreaView>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.statusBarHeight,
+    // marginTop: Constants.statusBarHeight,
     flex: 1
   },
   button: {

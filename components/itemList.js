@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Dimensions, View, StyleSheet, Image, FlatList, Text } from 'react-native';
 import ItemRow from './ItemRow';
-import { FontAwesome } from '@expo/vector-icons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const ItemsList = (props) => {
   const { data, cartItems, cart, setShowButton, getCartItems} = props

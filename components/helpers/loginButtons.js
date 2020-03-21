@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { register, validateToken } from '../../../store/actions/authenticationAction';
+import { register, validateToken } from '../../store/actions/authenticationAction';
 
 function LoginButtons(props) {
   const { phone,

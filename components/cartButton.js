@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { TouchableOpacity, View, StyleSheet, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
+import Feather from 'react-native-vector-icons/Feather';
 
 function CartButton(props) {
   const { navigate } = props.navigation

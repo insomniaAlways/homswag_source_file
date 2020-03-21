@@ -1,14 +1,15 @@
 import React from 'react';
 import { SafeAreaView } from 'react-navigation';
 import { DrawerItems } from 'react-navigation-drawer';
-import { StyleSheet, ScrollView, View, Image, Text, ImageBackground } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, ImageBackground, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import ProfileBackground from '../../assets/images/blue-wave.jpg';
-import Constants from 'expo-constants';
-import { onSigout } from '../../store/actions/authenticationAction';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ProfileBackground from '../assets/images/blue-wave.jpg';
+// import Constants from 'expo-constants';
+import { onSigout } from '../store/actions/authenticationAction';
 import { connect } from 'react-redux';
-import { setSessionUnauthenticated } from '../../store/actions/sessionActions';
+import { setSessionUnauthenticated } from '../store/actions/sessionActions';
 
 const SideDrawer = props => {
   const { navigation, signOut, currentUserModel, unAuthenticate } = props
@@ -58,7 +59,7 @@ const SideDrawer = props => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   profilePicContainer: {
     height: 230,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     paddingLeft: 30,
-    paddingTop: Constants.statusBarHeight
+    // paddingTop: Constants.statusBarHeight
   },
   profilePic: {
     height: 100,

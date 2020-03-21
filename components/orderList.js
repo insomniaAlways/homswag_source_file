@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import OrderItem from './orderItem';
 import { View, StyleSheet, Image, Text, FlatList } from 'react-native';
-import EmptyOrder from '../../assets/images/order_empty.png'
+import EmptyOrder from '../assets/images/order_empty.png'
 
 const OrderList = function(props) {
   const { orders, navigation, orderModel } = props

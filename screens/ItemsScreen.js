@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchItems } from '../../store/actions/itemActions';
+import { fetchItems } from '../store/actions/itemActions';
 import { connect } from 'react-redux';
 import ItemsList from '../components/itemList';
 import * as Animatable from 'react-native-animatable';
@@ -7,9 +7,9 @@ import _ from 'lodash';
 import DynamicTabs from '../components/dynamicTabs';
 import { View, TouchableOpacity, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { brandColor } from '../style/customStyles';
-import { fetchCategories } from '../../store/actions/index';
-import { fetchCartItems } from '../../store/actions/cartItemAction';
-import { fetchAllItems } from '../../store/actions/itemActions';
+import { fetchCategories } from '../store/actions/index';
+import { fetchCartItems } from '../store/actions/cartItemAction';
+import { fetchAllItems } from '../store/actions/itemActions';
 
 function Items(props) {
   const { navigation, items, cartItemModel, cart } = props;
@@ -39,7 +39,7 @@ function Items(props) {
   }, [cartItemModel.values.length])
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: "#F7F9FC"}}>
       { category.hasSubCategory ?
         <DynamicTabs
           category={category}

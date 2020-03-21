@@ -3,15 +3,15 @@ import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, Text } fr
 import MapView from 'react-native-maps';
 import FloatingInput from '../components/input-helpers.js/floatingInput';
 import { connect } from 'react-redux';
-import { geoCoding, getPlace } from '../../store/actions/locationActions';
-import { creatNew, fetchAddress } from '../../store/actions/addressActions';
+import { geoCoding, getPlace } from '../store/actions/locationActions';
+import { creatNew, fetchAddress } from '../store/actions/addressActions';
 import { KeyboardAvoidingView } from '../components/KeyboardAvoidView'
 import _ from 'lodash';
-import { FontAwesome } from '@expo/vector-icons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Label } from 'native-base';
-import * as Permissions from 'expo-permissions';
+// import * as Permissions from 'expo-permissions';
 import { brandColor, brandLightBackdroundColor } from '../style/customStyles';
-import * as Location from 'expo-location';
+// import * as Location from 'expo-location';
 
 const initialRegion = {
   latitude: 12.97194,
@@ -59,14 +59,14 @@ function AddressScreen(props) {
           setLoading(false)
           alert('Seems like you are not connected to Internet')
         } else {
-          const locationResponse = await Location.reverseGeocodeAsync({latitude, longitude})
-          let formatted_address = `${locationResponse[0].name}, ${locationResponse[0].street}, ${locationResponse[0].city}, ${locationResponse[0].postalCode}, ${locationResponse[0].region}, ${locationResponse[0].country}`
-          setGeocoding({
-            formatedAddress: formatted_address,
-            geometry: { latitude: latitude, longitude: longitude },
-          })
-          setCoodinatesLoaded(true)
-          setLoading(false)
+          // const locationResponse = await Location.reverseGeocodeAsync({latitude, longitude})
+          // let formatted_address = `${locationResponse[0].name}, ${locationResponse[0].street}, ${locationResponse[0].city}, ${locationResponse[0].postalCode}, ${locationResponse[0].region}, ${locationResponse[0].country}`
+          // setGeocoding({
+          //   formatedAddress: formatted_address,
+          //   geometry: { latitude: latitude, longitude: longitude },
+          // })
+          // setCoodinatesLoaded(true)
+          // setLoading(false)
         }
       } catch(e) {
         alert(e, location.error)
@@ -87,14 +87,14 @@ function AddressScreen(props) {
   useEffect(() => {
     if(!isCurrentLoactionLoaded) {
       async function getPemission() {
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-          onError()
-        } else {
+        // let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        // if (status !== 'granted') {
+        //   onError()
+        // } else {
           // return navigator.geolocation.getCurrentPosition(
           //   ({coords}) => debounceCall(coords.latitude, coords.longitude),
           //   onError, {enableHighAccuracy: true, maximumAge: 0});
-        }
+        // }
       }
       getPemission()
     }

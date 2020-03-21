@@ -3,10 +3,10 @@ import { View, TouchableOpacity, ScrollView, Image, Text } from 'react-native';
 import DefaultStyles from '../style/customStyles';
 import { StyleSheet } from 'react-native';
 import { connect } from "react-redux";
-import { createCartItem, deleteItem } from "../../store/actions/cartItemAction";
+import { createCartItem, deleteItem } from "../store/actions/cartItemAction";
 import _ from 'lodash';
 import { Dimensions } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 

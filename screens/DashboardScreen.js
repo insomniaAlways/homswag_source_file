@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, SafeAreaView, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, RefreshControl, ActivityIndicator, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchCategories } from '../../store/actions/index';
+import { fetchCategories } from '../store/actions/index';
 import CategoryList from '../components/categoryList';
-import { fetchUser } from '../../store/actions/userActions';
-import { fetchCart } from '../../store/actions/cartAction';
-import { fetchCartItems } from '../../store/actions/cartItemAction';
-import { fetchAllItems } from '../../store/actions/itemActions';
-import { fetchPackages } from '../../store/actions/packageActions';
+import { fetchUser } from '../store/actions/userActions';
+import { fetchCart } from '../store/actions/cartAction';
+import { fetchCartItems } from '../store/actions/cartItemAction';
+import { fetchAllItems } from '../store/actions/itemActions';
+import { fetchPackages } from '../store/actions/packageActions';
 import OfferView from '../components/offerView';
 import PromoView from '../components/promoView';
+import { statusBarBrandColor } from '../style/customStyles';
 import * as Animatable from 'react-native-animatable';
 
 function Dashboard(props) {
@@ -57,7 +58,8 @@ function Dashboard(props) {
   }, [props.navigation.isFocused])
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: "#FFFFFF"}}>
+      <StatusBar barStyle={"list-content"} backgroundColor={statusBarBrandColor} />
       <ScrollView showsVerticalScrollIndicator={false} refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} enabled={true}/>
         }>
@@ -65,7 +67,7 @@ function Dashboard(props) {
           <OfferView packages={props.packages} navigation={props.navigation}/>
         </View>
         <Text style={{paddingLeft: 20, paddingBottom: 0, paddingTop: 10}}>What would you like to do?</Text>
-        <View style={{paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 10}}>
+        <View style={{paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 10, backgroundColor: "#FFFFFF"}}>
           {props.categories.isLoading ? 
             <View style={{height: 600, justifyContent: 'center', alignItems: 'center'}}>
               <ActivityIndicator size="small" color="#0000ff" />
