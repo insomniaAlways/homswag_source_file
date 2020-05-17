@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, View, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Text } from 'react-native';
+import { View, TouchableOpacity, ScrollView, StyleSheet, Text } from 'react-native';
 import SelectDate from '../components/SelectDate';
 import SelectTimeSlot from '../components/selectTimeSlot';
 import BookingDetails from '../components/bookingDetails';
@@ -12,8 +12,10 @@ import { KeyboardAvoidingView } from '../components/KeyboardAvoidView';
 import { updateAppointmentState } from '../store/actions/appointmentActions';
 import _ from 'lodash';
 import moment from 'moment';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 function ScheduleAppointmentScreen(props) {
+  const insets = useSafeArea();
   const { appointmentModel, addresses, getAddress, currentUserModel, updateAppointment } = props
   const [ openAddressModal, setModal ] = useState(false)
   const [ scrollOffset, setScrollOffset ] = useState(0)
@@ -39,7 +41,7 @@ function ScheduleAppointmentScreen(props) {
         switch (selectedSlot.type) {
           case 1: {
             if(isAfter) {
-              if(moment().isSameOrAfter(moment().startOf('days').add(17, 'hours'))) {
+              if(moment().isSameOrAfter(moment().startOf('days').add(18, 'hours'))) {
                 alert('Please select a time slot.')
               } else {
                 alert('You cannot schedule for the selected time slot.')
@@ -52,14 +54,6 @@ function ScheduleAppointmentScreen(props) {
           case 2: {
             if(isAfter) {
               alert('You cannot schedule for the selected time slot.')
-              return false
-            } else {
-              return true
-            }
-          }
-          case 3: {
-            if(isAfter) {
-              alert('You cannot schedule for the selected time slot for today')
               return false
             } else {
               return true
@@ -152,8 +146,8 @@ function ScheduleAppointmentScreen(props) {
           </View>
         </View>
       </View>
-      <View style={[{height: 55}, DefaultStyles.brandBackgroundColor]}>
-        <TouchableOpacity onPress={() => save()} style={{alignItems: 'center', paddingTop: 15, paddingBottom: 10, width: '100%'}}>
+      <View style={[{height: 55, marginBottom: insets.bottom, justifyContent: 'center'}, DefaultStyles.brandBackgroundColor]}>
+        <TouchableOpacity onPress={() => save()} style={{alignItems: 'center', width: '100%', justifyContent: 'center'}}>
           <Text style={{color: '#fff', fontSize: 16}}>Save & Continue</Text>
         </TouchableOpacity>
       </View>

@@ -10,8 +10,11 @@ import CartPromoItemList from '../components/cartPromoItemList';
 import EmptyCart from '../assets/images/empty_cart.png'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment'
+import * as Sentry from '@sentry/react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 function CartScreen(props) {
+  const insets = useSafeArea();
   const { navigation, cartModel, cartItemModel, appointment, networkAvailability } = props;
 
   useLayoutEffect(() => {
@@ -24,12 +27,14 @@ function CartScreen(props) {
   useEffect(() => {
     if(!cartItemModel.isLoading && cartItemModel.error) {
       alert(cartItemModel.error)
+      Sentry.captureException(cartItemModel.error)
     }
   }, [cartItemModel.error])
 
   useEffect(() => {
     if(!cartModel.isLoading && cartModel.error) {
       alert(cartModel.error)
+      Sentry.captureException(cartModel.error)
     }
   }, [cartModel.error])
 
@@ -41,7 +46,7 @@ function CartScreen(props) {
         switch (appointment.defaultValues.slot.type) {
           case 1: {
             if(isAfter) {
-              if(moment().isSameOrAfter(moment().startOf('days').add(17, 'hours'))) {
+              if(moment().isSameOrAfter(moment().startOf('days').add(18, 'hours'))) {
                 alert('Please select a valid time slot.')
               } else {
                 alert('You cannot schedule for the selected time slot.')
@@ -54,14 +59,6 @@ function CartScreen(props) {
           case 2: {
             if(isAfter) {
               alert('You cannot schedule for the selected time slot.')
-              return false
-            } else {
-              return true
-            }
-          }
-          case 3: {
-            if(isAfter) {
-              alert('You cannot schedule for the selected time slot for today')
               return false
             } else {
               return true
@@ -124,7 +121,7 @@ function CartScreen(props) {
             </View>
             </ScrollView>
           </View>
-          <View style={[{height: 55}, DefaultStyles.brandBackgroundColor]}>
+          <View style={[{height: 55, marginBottom: insets.bottom}, DefaultStyles.brandBackgroundColor]}>
             <TouchableOpacity style={[styles.button, DefaultStyles.brandColorButton]} onPress={() => goToConfirmPage()}>
               <Text style={{color:'#fff', fontSize: 18, fontWeight: 'bold', width: '100%', textAlign: 'center'}}>Next</Text>
             </TouchableOpacity>

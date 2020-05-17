@@ -2,13 +2,13 @@ import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, StatusBar } from 'react-native';
 import PlaceHolderTextInput from '../components/placeHolderTextInput';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-// import Constants from 'expo-constants';
 import { connect } from 'react-redux';
 import { fetchUser, updateUser } from '../store/actions/userActions';
 import { KeyboardAvoidingView } from '../components/KeyboardAvoidView';
 import _ from 'lodash';
 import ImagePickerView from '../components/ImagePicker';
 import { brandLightBackdroundColor, statusBarLightColor } from '../style/customStyles';
+import * as Sentry from '@sentry/react-native';
 
 function ProfileScreen(props) {
   const { currentUserModel, getUser, updateUserDetails, networkAvailability } = props
@@ -18,7 +18,7 @@ function ProfileScreen(props) {
   const [ isUploading, setUploding ] = useState(false)
 
   const updateProfile = () => {
-    if(currentUserObject.name && typeof(currentUserObject.name) == "string" && currentUserObject.name.length > 0) {
+    if(currentUserObject.name && typeof(currentUserObject.name) == "string" && currentUserObject.name.trim() && currentUserObject.name.trim().length > 0) {
       setLoading(true)
       updateUserDetails(_.omitBy({
         name: currentUserObject.name,
@@ -50,8 +50,10 @@ function ProfileScreen(props) {
       setLoading(false)
       if(currentUserModel.error.message) {
         alert(currentUserModel.error.message)
+        Sentry.captureException(currentUserModel.error)
       } else {
         alert(currentUserModel.error)
+        Sentry.captureException(currentUserModel.error)
       }
     } else if(!currentUserModel.isLoading && _.isNil(currentUserModel.error)){
       setLoading(false)
@@ -86,7 +88,7 @@ function ProfileScreen(props) {
             </View>
             <View style={{justifyContent: 'flex-end', alignItems: 'flex-end', width: 'auto', marginHorizontal: 40}}>
               {isEdit ? 
-                <TouchableOpacity onPress={() => cancelEdit()}>
+                <TouchableOpacity onPress={() => cancelEdit()} disabled={isUploading}>
                   <Text>Cancel</Text>
                 </TouchableOpacity>:
                 <TouchableOpacity onPress={() => setEdit(true)}>
@@ -179,7 +181,7 @@ function ProfileScreen(props) {
             <View>
               {isEdit ? 
                 <View>
-                  {networkAvailability.isOffline ? 
+                  {networkAvailability.isOffline || isUploading ? 
                     <TouchableOpacity disabled={true}>
                       <View style={[styles.backButton, {backgroundColor: brandLightBackdroundColor}]}>
                         <Text style={{color: "#fff"}}>Save</Text>

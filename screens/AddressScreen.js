@@ -6,6 +6,7 @@ import DefaultStyles, { statusBarBrandColor } from '../style/customStyles';
 import { fetchAddress, deleteAddresss, updateAddress } from '../store/actions/addressActions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as Sentry from '@sentry/react-native';
 
 function AddressScreen(props) {
   const { addressModel, getAddress, navigation, deleteSelected, setDefault, networkAvailability } = props;
@@ -21,6 +22,7 @@ function AddressScreen(props) {
   useEffect(() => {
     if(!addressModel.isLoading && addressModel.error) {
       alert(addressModel.error)
+      Sentry.captureException(addressModel.error)
     }
   }, [addressModel.error])
 
@@ -103,7 +105,7 @@ function AddressScreen(props) {
     )
   } else {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: "#F7F9FC"}}>
         <StatusBar barStyle={"light-content"} backgroundColor={statusBarBrandColor} />
         <View style={{flex: 1}}>
           {addressModel.isLoading ? (

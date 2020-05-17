@@ -12,11 +12,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable from 'react-native-animatable';
 import LoginForm from '../../components/helpers/loginForm';
 import LoginButtons from '../../components/helpers/loginButtons';
-// import Constants from 'expo-constants';
-import moment from 'moment';
-// import * as Sentry from 'sentry-expo';
+import * as Sentry from '@sentry/react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 const LoginScreen = (props) => {
+  const insets = useSafeArea();
   const { navigation,
     registerUser,
     currentUserModel,
@@ -33,6 +33,7 @@ const LoginScreen = (props) => {
   const [ isLoading, setLoading ] = useState(true)
   const [ isButtonLoading, setButtonLoading ] = useState(false)
   const [ isResendEnable, enableResend ] = useState(false)
+  const [ isNewUser, setUserIsNew ] = useState(false)
   let resendTimer;
   //  ------------------ : Methods: ---------------------
 
@@ -45,23 +46,31 @@ const LoginScreen = (props) => {
   //while application load
   const checkAuthentication = async () => {
     try {
-      let token = await AsyncStorage.getItem('token')
-      if(token) {
-        let tokenObject = JSON.parse(token)
-        if(tokenObject && tokenObject.authToken && tokenObject.refreshToken) {
-          // Sentry.captureMessage(`Refresh token initiated on: ${moment().unix()}`);
-          validateCurrentToken(tokenObject.authToken, tokenObject.refreshToken)
+      if(!session.isSessionAuthenticated) {
+        let token = await AsyncStorage.getItem('token')
+        if(token) {
+          setUserIsNew(false)
+          let tokenObject = JSON.parse(token)
+          if(tokenObject && tokenObject.authToken && tokenObject.refreshToken) {
+            validateCurrentToken(tokenObject.authToken, tokenObject.refreshToken)
+          } else {
+            startLoginProcess()
+          }
         } else {
+          setUserIsNew(true)
           startLoginProcess()
         }
       } else {
-        startLoginProcess()
+        setButtonLoading(false)
+        setLoading(false)
+        navigation.navigate('App')
       }
     } catch (e) {
       if(typeof(e) == "string" && e.includes('JSON')) {
         alert('Your session has expired, Please Login again')
       } else {
         alert(e)
+        Sentry.captureException(e)
       }
       setLoading(false)
     }
@@ -95,6 +104,7 @@ const LoginScreen = (props) => {
         } catch(e) {
           setButtonLoading(false)
           alert(e)
+          Sentry.captureException(e)
         }
       } else {
         alert("Please provide a valid phone number")
@@ -107,22 +117,25 @@ const LoginScreen = (props) => {
   // ------------------- : Hooks : ---------------------
 
   useEffect(() => {
-    // Sentry.captureMessage(`Login screen load on: ${moment().unix()}`);
     checkAuthentication()
   }, [])
 
   //trigger when otp validation succeed
   useEffect(() => {
     if(!authModel.isLoading && authModel.userToken && authModel.refreshToken) {
-      // Sentry.captureMessage(`User authentication initiated on: ${moment().unix()}`);
       authenticate(authModel.userToken, authModel.refreshToken)
+      if(!isNewUser) {
+        navigation.navigate('App')
+      }
     } else if(!authModel.isLoading && authModel.error) {
       setButtonLoading(false)
       setLoading(false)
       if(authModel.error && authModel.error.message) {
         alert(authModel.error.message)
+        Sentry.captureException(authModel.error.message)
       } else {
         alert(authModel.error)
+        Sentry.captureException(authModel.error)
       }
     }
   }, [authModel])
@@ -130,7 +143,6 @@ const LoginScreen = (props) => {
   //trigger after session is authenticated
   useEffect(() => {
     if(session.isSessionAuthenticated) {
-      // Sentry.captureMessage(`Get User initiated on ${moment().unix()}`);
       getUser()
     }
   }, [session.isSessionAuthenticated])
@@ -138,16 +150,17 @@ const LoginScreen = (props) => {
   //trigger after only session get authenticated
   //Should responsible for redirection
   useEffect(() => {
-    if(session.isSessionAuthenticated) {
+    if(session.isSessionAuthenticated && isNewUser) {
       if(!currentUserModel.isLoading && currentUserModel.values && currentUserModel.values.id) {
-        // Sentry.captureMessage(`Redirection initiated no: ${moment().unix()}`);
         redirectTo()
       } else if(!currentUserModel.isLoading && currentUserModel.error) {
         setButtonLoading(false)
         if(currentUserModel.error && currentUserModel.error.message) {
           alert(currentUserModel.error.message)
+          Sentry.captureException(currentUserModel.error.message)
         } else {
           alert(currentUserModel.error)
+          Sentry.captureException(currentUserModel.error)
         }
       }
     }
@@ -159,7 +172,7 @@ const LoginScreen = (props) => {
     <ImageOverlay
       style={styles.container}
       source={ImageBackground}>
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, paddingTop: insets.top}}>
         <View style={styles.headerContainer}>
           <Image source={Logo} style={{width: 180, height: 180}}/>
         </View>
@@ -237,10 +250,8 @@ const styles = StyleSheet.create({
     flex: 3,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-    // paddingTop: Constants.statusBarHeight + 60
   },
   headerContainer: {
-    // paddingTop: Constants.statusBarHeight + 40,
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: 216,

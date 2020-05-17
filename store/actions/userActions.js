@@ -2,11 +2,14 @@ import { USER_REQUEST_INITIATED, USER_REQUEST_SUCCESS, USER_REQUEST_FAILED, USER
 import { findRecord, updateRecord } from '../asyncActions';
 
 export const fetchUser = () => {
-  return function(dispatch) {
-    dispatch(onStart())
-    return findRecord('me')
-    .then(res => dispatch(onSuccess(res.data)))
-    .catch(e => dispatch(onError(e.response.data)))
+  return async (dispatch) => {
+    try {
+      dispatch(onStart())
+      let res = await findRecord('me')
+      return dispatch(onSuccess(res.data))
+    } catch (e) {
+      return dispatch(onError(e))
+    }
   }
 }
 
@@ -15,7 +18,7 @@ export const updateUser = (data) => {
     dispatch(onStart())
     return updateRecord('me', null, data)
     .then(res => dispatch(onUserDetailsUpdate(res.data)))
-    .catch(e => dispatch(onError(e.response.data)))
+    .catch(e => dispatch(onError(e)))
   }
 }
 
@@ -39,8 +42,16 @@ export const onSuccess = (payload) => {
 }
 
 export const onError = (error) => {
-  return {
-    type: USER_REQUEST_FAILED,
-    error: error
+  if(error && error.response && error.response.data) {
+    return {
+      type: USER_REQUEST_FAILED,
+      error: error.response.data
+    }
+  } else {
+    return {
+      type: USER_REQUEST_FAILED,
+      error: error
+    }
   }
+
 }

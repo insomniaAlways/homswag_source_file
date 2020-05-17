@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Image } from 'react-native';
 
 function PromoCard({ style, source }) {
   return (
@@ -7,6 +7,7 @@ function PromoCard({ style, source }) {
       <Image 
         style={{height: 220, width: 250, borderRadius: 10}}
         source={source}
+        resizeMode={"stretch"}
       />
     </View>
   )

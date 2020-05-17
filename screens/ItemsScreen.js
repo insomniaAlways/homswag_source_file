@@ -10,8 +10,11 @@ import { brandColor } from '../style/customStyles';
 import { fetchCategories } from '../store/actions/index';
 import { fetchCartItems } from '../store/actions/cartItemAction';
 import { fetchAllItems } from '../store/actions/itemActions';
+import * as Sentry from '@sentry/react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 function Items(props) {
+  const insets = useSafeArea();
   const { navigation, items, cartItemModel, cart } = props;
   const category = navigation.getParam('category')
   const [ selectedItems, setSelectedItems ] = useState([])
@@ -27,6 +30,7 @@ function Items(props) {
   useEffect(() => {
     if(!cartItemModel.isLoading && cartItemModel.error) {
       alert(cartItemModel.error)
+      Sentry.captureException(cartItemModel.error)
     }
   }, [cartItemModel.error])
 
@@ -39,7 +43,7 @@ function Items(props) {
   }, [cartItemModel.values.length])
 
   return (
-    <View style={{flex: 1, backgroundColor: "#F7F9FC"}}>
+    <View style={{flex: 1, backgroundColor: "#F7F9FC", paddingBottom: insets.bottom}}>
       { category.hasSubCategory ?
         <DynamicTabs
           category={category}

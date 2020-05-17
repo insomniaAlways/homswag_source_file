@@ -4,14 +4,17 @@ import { fetchCart } from '../store/actions/cartAction';
 import { createOrder } from '../store/actions/orderActions';
 import Graphics from '../assets/images/order_confirm_background.png'
 import { View, StyleSheet, ScrollView, ImageBackground, Text } from 'react-native';
-// import Constants from 'expo-constants';
 import ItemView from '../components/itemView';
 import { TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import { brandColor, brandLightBackdroundColor } from '../style/customStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as Sentry from '@sentry/react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
+import * as Device from 'expo-device';
 
 function ReviewOrderScreen (props) {
+  const insets = useSafeArea();
   const { cart, orderModel, getCart, placeOrder, appointment, networkAvailability } = props
   const [ isloading, setLoading ] = useState(false)
   const { cart_items, cart_total, item_total_price } = cart.values
@@ -25,6 +28,7 @@ function ReviewOrderScreen (props) {
   useEffect(() => {
     if(!orderModel.isloading && orderModel.error) {
       alert(orderModel.error)
+      Sentry.captureException(orderModel.error)
     }
   }, [orderModel.error])
 
@@ -32,16 +36,8 @@ function ReviewOrderScreen (props) {
     setLoading(true)
     let appointmentDetails = appointment.defaultValues
     let from, to;
-    if(appointmentDetails.slot.type == 1) {
-      from = moment(appointmentDetails.from).startOf('days').add(9, 'hours').toISOString()
-      to = moment(appointmentDetails.from).startOf('days').add(12, 'hours').toISOString()
-    } else if (appointmentDetails.slot.type == 2) {
-      from = moment(appointmentDetails.from).startOf('days').add(12, 'hours').toISOString()
-      to = moment(appointmentDetails.from).startOf('days').add(15, 'hours').toISOString()
-    } else {
-      from = moment(appointmentDetails.from).startOf('days').add(15, 'hours').toISOString()
-      to = moment(appointmentDetails.from).startOf('days').add(18, 'hours').toISOString()
-    }
+    from = moment(appointmentDetails.from).startOf('days').add(appointmentDetails.slot.from, 'hours').toISOString()
+    to = moment(appointmentDetails.from).startOf('days').add(appointmentDetails.slot.to, 'hours').toISOString()
     try {
       let order = await placeOrder({
         "payment_method": 1,
@@ -51,7 +47,14 @@ function ReviewOrderScreen (props) {
         "total_paid": 0, //need to change when online payment
         "status": 1,
         "special_instruction": appointmentDetails.special_instruction,
-        "preferred_beautician": appointmentDetails.prefered_beautician
+        "preferred_beautician": appointmentDetails.prefered_beautician,
+        "device": {
+          modelName: Device.modelName,
+          brand: Device.brand,
+          modelId: Device.modelId,
+          osName: Device.osName,
+          deviceName: Device.deviceName
+        }
       })
       setLoading(false)
       props.navigation.navigate('OrderComplete', { order: order.payload.currentValue })
@@ -117,10 +120,10 @@ function ReviewOrderScreen (props) {
           </ScrollView>
         </View>
         { isloading ?
-          <TouchableOpacity style={{height: 57, justifyContent: 'center', alignItems: 'center', backgroundColor: brandLightBackdroundColor}} disabled={true}>
+          <TouchableOpacity style={{height: 57, justifyContent: 'center', alignItems: 'center', backgroundColor: brandLightBackdroundColor, marginBottom: insets.bottom}} disabled={true}>
             <Text style={{width: '100%', textAlign: 'center', color: '#fff', fontSize: 16, fontWeight: 'bold'}}>Booking...</Text>
           </TouchableOpacity> :
-          <TouchableOpacity style={{height: 57, justifyContent: 'center', alignItems: 'center', backgroundColor: brandColor}} onPress={() => confirmBooking()}>
+          <TouchableOpacity style={{height: 57, justifyContent: 'center', alignItems: 'center', backgroundColor: brandColor, marginBottom: insets.bottom}} onPress={() => confirmBooking()}>
             <Text style={{width: '100%', textAlign: 'center', color: '#fff', fontSize: 16, fontWeight: 'bold'}}>Book Appointment</Text>
           </TouchableOpacity>
         }

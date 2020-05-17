@@ -7,6 +7,8 @@ import { createCartItem, deleteItem } from "../store/actions/cartItemAction";
 import _ from 'lodash';
 import { Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as Sentry from '@sentry/react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 
@@ -52,6 +54,7 @@ const ItemContainer = ({items, packageService}) => {
 }
 
 const PackageDetails = (props) => {
+  const insets = useSafeArea();
   const { tab: packageService, cartItemModel, addItemToCart, deletePackage, networkAvailability } = props
   const [ isAdded, setIsAdded ] = useState(false)
 
@@ -62,6 +65,7 @@ const PackageDetails = (props) => {
   useEffect(() => {
     if(!cartItemModel.isLoading && cartItemModel.error) {
       alert(cartItemModel.error)
+      Sentry.captureException(cartItemModel.error)
     }
   }, [cartItemModel.error])
 
@@ -91,7 +95,7 @@ const PackageDetails = (props) => {
   return (
     <View style={{flex: 1}}>
       <ScrollView style={{paddingBottom: 20}} showsVerticalScrollIndicator={false}>
-        <Image source={{uri: packageService.poster_image_source}} style={{width: screenWidth, height: 260}}/>
+        <Image source={{uri: packageService.poster_image_source}} style={{width: screenWidth, height: 260}} resizeMode={"stretch"}/>
         <ItemContainer items={packageService.items} packageService={packageService}/>
       </ScrollView>
       { cartItemModel.isLoading ?
@@ -100,7 +104,7 @@ const PackageDetails = (props) => {
         </View> :
         <View>
           {!networkAvailability.isOffline &&
-            <View>
+            <View style={{marginBottom: insets.bottom}}>
               { isAdded ? 
                 <View style={[{height: 55}, DefaultStyles.brandBackgroundColor]}>
                   <TouchableOpacity style={[styles.button, DefaultStyles.brandColorButton]} onPress={removePackageFromCart}>

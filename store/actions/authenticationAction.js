@@ -12,7 +12,13 @@ export const register = (phone) => {
     dispatch(loginInitiated())
     return createRecord('login', { phone: phone })
     .then(() => dispatch(onLoginSuccess()))
-    .catch(e => dispatch(onLoginFailed(e.response.data)))
+    .catch(e => {
+      if(e && e.response && e.response.data) {
+        return dispatch(onLoginFailed(e.response.data))
+      } else {
+        return dispatch(onLoginFailed(e))
+      }
+    })
   }
 }
 
@@ -36,16 +42,21 @@ export const onLoginFailed = (error) => {
 }
 
 export const validateToken = (phone, otp) => {
-  return async function(dispatch) {
-    dispatch(onValidationStart())
-    return createRecord('me/validate', {phone: phone, otp: otp})
-    .then((res) => {
+  return async (dispatch) => {
+    try {
+      dispatch(onValidationStart())
+      let res = await createRecord('me/validate', {phone: phone, otp: otp})
       if(res && res.data && res.data.token) {
         dispatch(addHeader(res.data.token))
         return dispatch(onValidationSuccess(res.data))
       }
-    })
-    .catch(e => dispatch(onValidationError(e.response.data)))
+    } catch (e) {
+      if(e && e.response && e.response.data) {
+        dispatch(onValidationError(e.response.data))
+      } else {
+        dispatch(onValidationError(e))
+      }
+    }
   }
 }
 
@@ -82,15 +93,20 @@ export const onSigout = () => {
 }
 
 export const validatedAuthToken = (authToken, refreshToken) => {
-  return function (dispatch) {
-    dispatch(onValidationStart())
-    return createRecord('token', {token: authToken, refresh_token: refreshToken})
-    .then((res) => {
+  return async (dispatch) => {
+    try {
+      dispatch(onValidationStart())
+      let res = await createRecord('token', {token: authToken, refresh_token: refreshToken})
       if(res && res.data && res.data.token) {
         dispatch(addHeader(res.data.token))
         return dispatch(onValidationSuccess(res.data))
       }
-    })
-    .catch(e => dispatch(onValidationError(e.response.data)))
+    } catch (e) {
+      if(e && e.response && e.response.data) {
+        dispatch(onValidationError(e.response.data))
+      } else {
+        dispatch(onValidationError(e))
+      }
+    }
   }
 }
